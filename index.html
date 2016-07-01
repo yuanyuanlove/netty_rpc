@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Netty rpc框架 by yuanyuanlove</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Netty rpc框架</h1>
+      <h2 class="project-tagline">基于netty写的rpc框架</h2>
+      <a href="https://github.com/yuanyuanlove/netty_rpc" class="btn">View on GitHub</a>
+      <a href="https://github.com/yuanyuanlove/netty_rpc/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/yuanyuanlove/netty_rpc/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h3>
+<a id="rpc框架" class="anchor" href="#rpc%E6%A1%86%E6%9E%B6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>rpc框架.</h3>
+
+<p>利用业余时间开发的基于netty4开发的java rpc框架，与spring集成，是个人在学习rpc技术之余写的东西.</p>
+
+<hr>
+
+<h3>
+<a id="设计思想" class="anchor" href="#%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>设计思想</h3>
+
+<p>在开发这个项目的时候，基本按照rpc的几个主要的参与者，本地存根、服务器存根、服务发现、网络通信、spring集成等模块思考，实际开发中借鉴了dubbo的设计，dubbo是一个非常好的SOA框架，也是我最先接触到的框架。阅读dubbo的代码，了解dubbo的原理，让我对感觉到服务化的优势。不过有时候还是会产生，纸上得来终觉浅的想法，了解很多技术原理但是不实践，感觉并没有真正掌握。在实际的开发中确实也遇到了一些困难，大部分通过借助于网络来搞清楚。</p>
+
+<hr>
+
+<h3>
+<a id="使用方式" class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>使用方式</h3>
+
+<p>不过目前jar包还没有发布到maven仓库里面</p>
+
+<h4>
+<a id="客户端配置xml" class="anchor" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%85%8D%E7%BD%AExml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>客户端配置xml：</h4>
+
+<div class="highlight highlight-text-xml"><pre>&lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>UTF-8<span class="pl-pds">"</span></span>?&gt;
+&lt;<span class="pl-ent">beans</span> <span class="pl-e">xmlns</span>=<span class="pl-s"><span class="pl-pds">"</span>http://www.springframework.org/schema/beans<span class="pl-pds">"</span></span>
+       <span class="pl-e">xmlns</span><span class="pl-e">:</span><span class="pl-e">xsi</span>=<span class="pl-s"><span class="pl-pds">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="pl-pds">"</span></span> <span class="pl-e">xmlns</span><span class="pl-e">:</span><span class="pl-e">netty</span>=<span class="pl-s"><span class="pl-pds">"</span>http://www.yuanyuan.com/schema/netty_rpc<span class="pl-pds">"</span></span>
+       <span class="pl-e">xsi</span><span class="pl-e">:</span><span class="pl-e">schemaLocation</span>=<span class="pl-s"><span class="pl-pds">"</span>http://www.springframework.org/schema/beans</span>
+<span class="pl-s">       http://www.springframework.org/schema/beans/spring-beans.xsd</span>
+<span class="pl-s">       http://www.yuanyuan.com/schema/netty_rpc</span>
+<span class="pl-s">       http://www.yuanyuan.com/schema/netty_rpc.xsd<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">netty</span><span class="pl-ent">:</span><span class="pl-ent">registry</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>dev<span class="pl-pds">"</span></span> <span class="pl-e">address</span>=<span class="pl-s"><span class="pl-pds">"</span>${rpc.registry.address}<span class="pl-pds">"</span></span> <span class="pl-e">group</span>=<span class="pl-s"><span class="pl-pds">"</span>${rpc.test.group}<span class="pl-pds">"</span></span>/&gt;
+
+    &lt;<span class="pl-ent">netty</span><span class="pl-ent">:</span><span class="pl-ent">consumer</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>iTestServiceConsumer<span class="pl-pds">"</span></span> <span class="pl-e">registry</span>=<span class="pl-s"><span class="pl-pds">"</span>dev<span class="pl-pds">"</span></span> <span class="pl-e">referenceInterface</span>=<span class="pl-s"><span class="pl-pds">"</span>com.yuanyuan.rpc.HelloWorldService<span class="pl-pds">"</span></span> <span class="pl-e">version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0.0<span class="pl-pds">"</span></span> <span class="pl-e">group</span>=<span class="pl-s"><span class="pl-pds">"</span>${netty.provider.group}<span class="pl-pds">"</span></span> <span class="pl-e">timeOut</span>=<span class="pl-s"><span class="pl-pds">"</span>3000<span class="pl-pds">"</span></span>/&gt;
+
+    &lt;<span class="pl-ent">netty</span><span class="pl-ent">:</span><span class="pl-ent">serializer</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>serializer<span class="pl-pds">"</span></span> <span class="pl-e">serializer</span>=<span class="pl-s"><span class="pl-pds">"</span>kryo<span class="pl-pds">"</span></span> <span class="pl-e">serializerConfig</span>=<span class="pl-s"><span class="pl-pds">"</span>com.yuanyuan.rpc.serialize.MySerializeConfig<span class="pl-pds">"</span></span>/&gt;
+&lt;/<span class="pl-ent">beans</span>&gt;</pre></div>
+
+<h4>
+<a id="服务端配置xml" class="anchor" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AExml" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>服务端配置xml：</h4>
+
+<div class="highlight highlight-text-xml"><pre> &lt;?<span class="pl-ent">xml</span><span class="pl-e"> version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span><span class="pl-e"> encoding</span>=<span class="pl-s"><span class="pl-pds">"</span>UTF-8<span class="pl-pds">"</span></span>?&gt;
+&lt;<span class="pl-ent">beans</span> <span class="pl-e">xmlns</span>=<span class="pl-s"><span class="pl-pds">"</span>http://www.springframework.org/schema/beans<span class="pl-pds">"</span></span>
+       <span class="pl-e">xmlns</span><span class="pl-e">:</span><span class="pl-e">xsi</span>=<span class="pl-s"><span class="pl-pds">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="pl-pds">"</span></span> <span class="pl-e">xmlns</span><span class="pl-e">:</span><span class="pl-e">netty</span>=<span class="pl-s"><span class="pl-pds">"</span>http://www.yuanyuan.com/schema/netty_rpc<span class="pl-pds">"</span></span>
+       <span class="pl-e">xsi</span><span class="pl-e">:</span><span class="pl-e">schemaLocation</span>=<span class="pl-s"><span class="pl-pds">"</span>http://www.springframework.org/schema/beans</span>
+<span class="pl-s">       http://www.springframework.org/schema/beans/spring-beans.xsd</span>
+<span class="pl-s">       http://www.yuanyuan.com/schema/netty_rpc</span>
+<span class="pl-s">       http://www.yuanyuan.com/schema/netty_rpc.xsd<span class="pl-pds">"</span></span>&gt;
+       &lt;<span class="pl-ent">netty</span><span class="pl-ent">:</span><span class="pl-ent">registry</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>dev<span class="pl-pds">"</span></span> <span class="pl-e">address</span>=<span class="pl-s"><span class="pl-pds">"</span>${rpc.registry.address}<span class="pl-pds">"</span></span> <span class="pl-e">group</span>=<span class="pl-s"><span class="pl-pds">"</span>${rpc.test.group}<span class="pl-pds">"</span></span>/&gt;
+
+       &lt;<span class="pl-ent">netty</span><span class="pl-ent">:</span><span class="pl-ent">serializer</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>serializer<span class="pl-pds">"</span></span> <span class="pl-e">serializer</span>=<span class="pl-s"><span class="pl-pds">"</span>kryo<span class="pl-pds">"</span></span> <span class="pl-e">serializerConfig</span>=<span class="pl-s"><span class="pl-pds">"</span>com.yuanyuan.rpc.serialize.MySerializeConfig<span class="pl-pds">"</span></span>/&gt;
+
+       &lt;<span class="pl-ent">netty</span><span class="pl-ent">:</span><span class="pl-ent">provider</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>iTestServiceProvider<span class="pl-pds">"</span></span> <span class="pl-e">registry</span>=<span class="pl-s"><span class="pl-pds">"</span>dev<span class="pl-pds">"</span></span> <span class="pl-e">referenceInterface</span>=<span class="pl-s"><span class="pl-pds">"</span>com.yuanyuan.rpc.HelloWorldService<span class="pl-pds">"</span></span> <span class="pl-e">version</span>=<span class="pl-s"><span class="pl-pds">"</span>1.0.0<span class="pl-pds">"</span></span> <span class="pl-e">group</span>=<span class="pl-s"><span class="pl-pds">"</span>${netty.provider.group}<span class="pl-pds">"</span></span> <span class="pl-e">ref</span>=<span class="pl-s"><span class="pl-pds">"</span>helloWorldServiceImpl<span class="pl-pds">"</span></span> <span class="pl-e">timeOut</span>=<span class="pl-s"><span class="pl-pds">"</span>3000<span class="pl-pds">"</span></span>/&gt;
+
+&lt;/<span class="pl-ent">beans</span>&gt;</pre></div>
+
+<h3>
+<a id="作者" class="anchor" href="#%E4%BD%9C%E8%80%85" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>作者</h3>
+
+<p>yuanyuan.pan</p>
+
+<h3>
+<a id="联系人" class="anchor" href="#%E8%81%94%E7%B3%BB%E4%BA%BA" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>联系人</h3>
+
+<p><a href="mailto:596826903@qq.com">596826903@qq.com</a></p>
+
+<h3>
+<a id="博客" class="anchor" href="#%E5%8D%9A%E5%AE%A2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>博客</h3>
+
+<p><a href="http://blog.csdn.net/yuanyuan2012love">http://blog.csdn.net/yuanyuan2012love</a></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/yuanyuanlove/netty_rpc">Netty rpc框架</a> is maintained by <a href="https://github.com/yuanyuanlove">yuanyuanlove</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
