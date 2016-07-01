@@ -6,3 +6,4 @@ package com.rpc.netty.api;
 public interface ITestService {
     public String hello(String name);
 }
+
